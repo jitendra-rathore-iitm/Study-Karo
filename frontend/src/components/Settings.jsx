@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import EnhancedNavbar from './EnhancedNavbar';
 import authService from '../services/authService';
+import modelManager from '../services/modelManager';
 import { setStorageItem, getStorageItem, validateApiKey } from '../utils/globalUtils';
 import { 
   Key, 
@@ -20,10 +21,8 @@ import {
 
 const Settings = ({ onLogout }) => {
   const [settings, setSettings] = useState({
-    openaiApiKey: '',
-    googleApiKey: '',
-    perplexityApiKey: '',
-    selectedModel: 'gpt-4',
+    apiKey: '',
+    selectedModel: 'gpt-5',
     userProfile: {
       name: '',
       email: '',
@@ -31,23 +30,12 @@ const Settings = ({ onLogout }) => {
     }
   });
 
-  const [showKeys, setShowKeys] = useState({
-    openai: false,
-    google: false,
-    perplexity: false
-  });
+  const [showApiKey, setShowApiKey] = useState(false);
 
   const [isSaving, setIsSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState('');
 
-  const aiModels = [
-    { id: 'gpt-4', name: 'GPT-4', provider: 'OpenAI', description: 'Most capable model for complex tasks' },
-    { id: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo', provider: 'OpenAI', description: 'Fast and efficient for most tasks' },
-    { id: 'gemini-pro', name: 'Gemini Pro', provider: 'Google', description: 'Google\'s most capable model' },
-    { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', provider: 'Google', description: 'Latest Gemini model with enhanced capabilities' },
-    { id: 'perplexity-sonar', name: 'Perplexity Sonar', provider: 'Perplexity', description: 'Real-time web search and analysis' },
-    { id: 'perplexity-online', name: 'Perplexity Online', provider: 'Perplexity', description: 'Online research and fact-checking' }
-  ];
+  const aiModels = modelManager.getAvailableModels();
 
   useEffect(() => {
     // Load user data from auth service
@@ -106,15 +94,40 @@ const Settings = ({ onLogout }) => {
     setSaveStatus('');
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Save to localStorage
+      // Update user profile in database
+      const profileResponse = await fetch('http://localhost:5001/api/auth/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authService.getToken()}`
+        },
+        body: JSON.stringify({
+          name: settings.userProfile.name,
+          email: settings.userProfile.email
+        })
+      });
+
+      if (!profileResponse.ok) {
+        const errorData = await profileResponse.json();
+        throw new Error(errorData.error || 'Failed to update profile');
+      }
+
+      // Update local user data
+      const updatedUser = await profileResponse.json();
+      authService.setUser(updatedUser.user);
+
+      // Set model and API key in model manager
+      if (settings.apiKey && settings.selectedModel) {
+        modelManager.setModel(settings.selectedModel, settings.apiKey);
+      }
+
+      // Save settings to localStorage
       setStorageItem('studykaro-settings', settings);
       
       setSaveStatus('success');
       setTimeout(() => setSaveStatus(''), 3000);
     } catch (error) {
+      console.error('Save error:', error);
       setSaveStatus('error');
       setTimeout(() => setSaveStatus(''), 3000);
     } finally {
@@ -240,35 +253,18 @@ const Settings = ({ onLogout }) => {
             Add your API keys to enable AI-powered features. Keys are stored securely in your browser.
           </p>
 
-          {[
-            {
-              provider: 'openai',
-              name: 'OpenAI API Key',
-              description: 'Required for GPT models',
-              key: settings.openaiApiKey,
-              placeholder: 'sk-...'
-            },
-            {
-              provider: 'google',
-              name: 'Google API Key',
-              description: 'Required for Gemini models',
-              key: settings.googleApiKey,
-              placeholder: 'AIza...'
-            },
-            {
-              provider: 'perplexity',
-              name: 'Perplexity API Key',
-              description: 'Required for Perplexity models',
-              key: settings.perplexityApiKey,
-              placeholder: 'pplx-...'
-            }
-          ].map((api) => {
-            const validation = validateApiKey(api.key, api.provider);
+          {(() => {
+            const selectedModel = aiModels.find(m => m.id === settings.selectedModel);
+            if (!selectedModel) return null;
+
+            const validation = validateApiKey(settings.apiKey, selectedModel.requiresKey);
             
             return (
-              <div key={api.provider} style={{ marginBottom: '2rem' }}>
+              <div style={{ marginBottom: '2rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                  <label className="form-label">{api.name}</label>
+                  <label className="form-label">
+                    {selectedModel.provider} API Key
+                  </label>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     {validation.valid ? (
                       <CheckCircle size={16} color="#10B981" />
@@ -286,15 +282,15 @@ const Settings = ({ onLogout }) => {
                 
                 <div style={{ position: 'relative' }}>
                   <input
-                    type={showKeys[api.provider] ? 'text' : 'password'}
-                    value={api.key}
-                    onChange={(e) => handleInputChange(`${api.provider}ApiKey`, e.target.value)}
+                    type={showApiKey ? 'text' : 'password'}
+                    value={settings.apiKey}
+                    onChange={(e) => handleInputChange('apiKey', e.target.value)}
                     className="api-key-input"
-                    placeholder={api.placeholder}
+                    placeholder={`Enter your ${selectedModel.provider} API key...`}
                   />
                   <button
                     type="button"
-                    onClick={() => toggleKeyVisibility(api.provider)}
+                    onClick={() => setShowApiKey(!showApiKey)}
                     style={{
                       position: 'absolute',
                       right: '1rem',
@@ -307,16 +303,16 @@ const Settings = ({ onLogout }) => {
                       padding: '0.25rem'
                     }}
                   >
-                    {showKeys[api.provider] ? <EyeOff size={20} /> : <Eye size={20} />}
+                    {showApiKey ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
                 </div>
                 
                 <p style={{ color: '#666', fontSize: '0.9rem', marginTop: '0.5rem' }}>
-                  {api.description}
+                  Required for {selectedModel.name} model
                 </p>
               </div>
             );
-          })}
+          })()}
         </motion.div>
 
         {/* Security Notice */}

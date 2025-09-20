@@ -144,3 +144,54 @@ def get_current_user():
         
     except Exception as e:
         return jsonify({"error": "Failed to get user info"}), 500
+
+@api_bp.route("/auth/profile", methods=["PUT"])
+def update_user_profile():
+    try:
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({"error": "Authorization header missing or invalid"}), 401
+        
+        token = auth_header.split(' ')[1]
+        
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            user_id = payload.get("sub")
+            if user_id is None:
+                return jsonify({"error": "Invalid token"}), 401
+        except jwt.JWTError:
+            return jsonify({"error": "Invalid token"}), 401
+        
+        user = User.query.filter_by(id=user_id).first()
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+        
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
+        
+        # Update user fields
+        if 'name' in data and data['name']:
+            user.name = data['name'].strip()
+        
+        if 'email' in data and data['email']:
+            # Check if email is already taken by another user
+            existing_user = User.query.filter_by(email=data['email'].strip().lower()).first()
+            if existing_user and existing_user.id != user.id:
+                return jsonify({"error": "Email already in use"}), 409
+            user.email = data['email'].strip().lower()
+        
+        db.session.commit()
+        
+        return jsonify({
+            "message": "Profile updated successfully",
+            "user": {
+                "id": user.id,
+                "name": user.name,
+                "email": user.email
+            }
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "Failed to update profile"}), 500

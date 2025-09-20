@@ -15,7 +15,8 @@ import {
   Plus,
   BarChart3,
   Target,
-  Award
+  Award,
+  Scissors
 } from 'lucide-react';
 
 const Dashboard = ({ onLogout }) => {
@@ -67,6 +68,22 @@ const Dashboard = ({ onLogout }) => {
 
   const features = [
     {
+      title: 'PDF Summarizer',
+      description: 'Extract and summarize key points from PDF documents',
+      icon: <Scissors size={32} />,
+      path: '/pdf-summarizer',
+      color: 'from-orange-500 to-red-500',
+      stats: stats.totalSummaries || 0
+    },
+    {
+      title: 'Flashcard Generator',
+      description: 'Generate flashcards automatically from study material',
+      icon: <Zap size={32} />,
+      path: '/flashcard-generator',
+      color: 'from-purple-500 to-pink-500',
+      stats: stats.totalFlashcards
+    },
+    {
       title: 'Quiz Builder',
       description: 'Create intelligent quizzes from any text using AI models',
       icon: <BookOpen size={32} />,
@@ -83,14 +100,6 @@ const Dashboard = ({ onLogout }) => {
       stats: stats.totalResumes
     },
     {
-      title: 'Flashcard Generator',
-      description: 'Generate flashcards automatically from study material',
-      icon: <Zap size={32} />,
-      path: '/flashcard-generator',
-      color: 'from-purple-500 to-pink-500',
-      stats: stats.totalFlashcards
-    },
-    {
       title: 'AI Models',
       description: 'Configure and manage your AI model preferences',
       icon: <Brain size={32} />,
@@ -101,10 +110,10 @@ const Dashboard = ({ onLogout }) => {
   ];
 
   const quickActions = [
-    { title: 'New Quiz', icon: <Plus size={20} />, path: '/quiz-builder' },
-    { title: 'New Resume', icon: <Plus size={20} />, path: '/resume-builder' },
-    { title: 'New Flashcards', icon: <Plus size={20} />, path: '/flashcard-generator' },
-    { title: 'View Analytics', icon: <BarChart3 size={20} />, path: '/dashboard' }
+    { title: 'PDF Summarizer', icon: <Scissors size={20} />, path: '/pdf-summarizer' },
+    { title: 'Flashcards', icon: <Zap size={20} />, path: '/flashcard-generator' },
+    { title: 'Quiz', icon: <BookOpen size={20} />, path: '/quiz-builder' },
+    { title: 'Resume', icon: <FileText size={20} />, path: '/resume-builder' }
   ];
 
   return (
@@ -313,80 +322,6 @@ const Dashboard = ({ onLogout }) => {
           ))}
         </motion.div>
 
-        {/* Recent Activity */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          style={{ marginTop: '3rem' }}
-        >
-          <h2 style={{ 
-            fontSize: '1.5rem', 
-            fontWeight: '700', 
-            marginBottom: '1.5rem',
-            color: '#ffffff',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem'
-          }}>
-            <Clock size={24} />
-            Recent Activity
-          </h2>
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.05)',
-            border: '1px solid rgba(77, 183, 255, 0.2)',
-            borderRadius: '16px',
-            padding: '1.5rem'
-          }}>
-            {recentActivity.map((activity, index) => (
-              <div
-                key={activity.id}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '1rem',
-                  padding: '1rem 0',
-                  borderBottom: index < recentActivity.length - 1 ? '1px solid rgba(77, 183, 255, 0.1)' : 'none'
-                }}
-              >
-                <div style={{
-                  width: '40px',
-                  height: '40px',
-                  background: activity.type === 'quiz' ? '#4DB7FF' : 
-                             activity.type === 'resume' ? '#10B981' : 
-                             activity.type === 'account' ? '#F59E0B' : '#8B5CF6',
-                  borderRadius: '8px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: 'white'
-                }}>
-                  {activity.type === 'quiz' ? <BookOpen size={20} /> :
-                   activity.type === 'resume' ? <FileText size={20} /> : 
-                   activity.type === 'account' ? <Award size={20} /> : <Zap size={20} />}
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: '600', color: '#ffffff', marginBottom: '0.25rem' }}>
-                    {activity.title}
-                  </div>
-                  <div style={{ color: '#cccccc', fontSize: '0.9rem' }}>
-                    {activity.time} • {activity.status}
-                  </div>
-                </div>
-                <div style={{
-                  background: activity.status === 'completed' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(77, 183, 255, 0.1)',
-                  color: activity.status === 'completed' ? '#10B981' : '#4DB7FF',
-                  padding: '0.25rem 0.75rem',
-                  borderRadius: '20px',
-                  fontSize: '0.8rem',
-                  fontWeight: '600'
-                }}>
-                  {activity.status}
-                </div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
       </div>
     </div>
   );

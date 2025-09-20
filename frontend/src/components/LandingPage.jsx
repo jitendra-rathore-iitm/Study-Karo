@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Users, BookOpen, Brain, FileText, Zap } from 'lucide-react';
+import { ArrowRight, Users, BookOpen, Brain, FileText, Zap, Scissors } from 'lucide-react';
 import EnhancedNavbar from './EnhancedNavbar';
 
 const LandingPage = () => {
@@ -89,6 +89,16 @@ const LandingPage = () => {
           }}>
             {[
               {
+                icon: <Scissors size={32} />,
+                title: 'PDF Summarizer',
+                description: 'Extract and summarize key points from PDF documents with AI'
+              },
+              {
+                icon: <Zap size={32} />,
+                title: 'Flashcard Generator',
+                description: 'Generate flashcards automatically from your study material'
+              },
+              {
                 icon: <BookOpen size={32} />,
                 title: 'Smart Quiz Builder',
                 description: 'Generate intelligent quizzes from any text using AI models'
@@ -97,16 +107,6 @@ const LandingPage = () => {
                 icon: <FileText size={32} />,
                 title: 'Resume Builder',
                 description: 'Create professional resumes with AI-powered suggestions'
-              },
-              {
-                icon: <Zap size={32} />,
-                title: 'Flashcard Generator',
-                description: 'Generate flashcards automatically from your study material'
-              },
-              {
-                icon: <Brain size={32} />,
-                title: 'AI Models Integration',
-                description: 'Choose from multiple AI models for optimal learning'
               }
             ].map((feature, index) => (
               <motion.div

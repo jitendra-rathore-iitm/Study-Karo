@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import EnhancedNavbar from './EnhancedNavbar';
+import modelManager from '../services/modelManager';
+import { useNotification } from './NotificationSystem';
 import { 
   Plus, 
   Trash2, 
@@ -29,6 +31,7 @@ const FlashcardGenerator = ({ onLogout }) => {
   const [isStudyMode, setIsStudyMode] = useState(false);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
+  const { success, error } = useNotification();
   const [studyStats, setStudyStats] = useState({
     correct: 0,
     incorrect: 0,
@@ -67,51 +70,49 @@ const FlashcardGenerator = ({ onLogout }) => {
 
   const generateFlashcards = async () => {
     if (!flashcardData.sourceText.trim()) {
-      alert('Please provide source text to generate flashcards');
+      error('Please provide source text to generate flashcards');
+      return;
+    }
+
+    // Check if model is configured
+    const modelInfo = modelManager.getModelInfo();
+    if (!modelInfo.hasApiKey) {
+      error('Please configure your AI model and API key in Settings first');
       return;
     }
 
     setIsGenerating(true);
-    
-    // Simulate AI generation
-    setTimeout(() => {
-      const generatedCards = [
-        {
-          id: Date.now() + 1,
-          front: 'What is React?',
-          back: 'React is a JavaScript library for building user interfaces, particularly web applications.',
-          difficulty: 'Easy',
-          category: 'React'
-        },
-        {
-          id: Date.now() + 2,
-          front: 'What is a component in React?',
-          back: 'A component is a reusable piece of UI that can accept inputs (props) and return React elements.',
-          difficulty: 'Medium',
-          category: 'React'
-        },
-        {
-          id: Date.now() + 3,
-          front: 'What is JSX?',
-          back: 'JSX is a syntax extension for JavaScript that allows you to write HTML-like code in your JavaScript files.',
-          difficulty: 'Medium',
-          category: 'React'
-        },
-        {
-          id: Date.now() + 4,
-          front: 'What is the virtual DOM?',
-          back: 'The virtual DOM is a JavaScript representation of the real DOM that React uses to optimize updates.',
-          difficulty: 'Hard',
-          category: 'React'
-        }
-      ];
+    try {
+      const result = await modelManager.generateFlashcards(flashcardData.sourceText, {
+        numCards: 10
+      });
 
-      setFlashcardData(prev => ({
-        ...prev,
-        flashcards: [...prev.flashcards, ...generatedCards]
-      }));
+      if (result.content) {
+        // Parse the JSON response
+        const flashcardData = JSON.parse(result.content);
+        
+        const generatedCards = flashcardData.cards.map((card, index) => ({
+          id: Date.now() + index + 1,
+          front: card.question,
+          back: card.answer,
+          difficulty: 'Medium',
+          category: 'Generated'
+        }));
+
+        setFlashcardData(prev => ({
+          ...prev,
+          flashcards: [...prev.flashcards, ...generatedCards],
+          title: flashcardData.title || prev.title
+        }));
+
+        success('Flashcards generated successfully!');
+      }
+    } catch (err) {
+      console.error('Error generating flashcards:', err);
+      error('Failed to generate flashcards. Please check your API key and try again.');
+    } finally {
       setIsGenerating(false);
-    }, 3000);
+    }
   };
 
   const startStudyMode = () => {

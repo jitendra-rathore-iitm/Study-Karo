@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'http://localhost:5001/api';
 
 class AuthService {
   async register(name, email, password) {
@@ -106,6 +106,10 @@ class AuthService {
   getUser() {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
+  }
+
+  setUser(user) {
+    localStorage.setItem('user', JSON.stringify(user));
   }
 }
 

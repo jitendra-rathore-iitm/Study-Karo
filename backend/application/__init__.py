@@ -21,7 +21,11 @@ def create_app():
     with app.app_context():
         from . import model
         from . import routes
+        from . import ai_routes
+        from . import pdf_routes
         app.register_blueprint(routes.api_bp, url_prefix='/api')
+        app.register_blueprint(ai_routes.ai_bp, url_prefix='/api')
+        app.register_blueprint(pdf_routes.pdf_bp, url_prefix='/api')
         db.create_all()
     return app
 

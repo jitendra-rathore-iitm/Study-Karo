@@ -8,6 +8,7 @@ import Settings from './components/Settings';
 import QuizBuilder from './components/QuizBuilder';
 import ResumeBuilder from './components/ResumeBuilder';
 import FlashcardGenerator from './components/FlashcardGenerator';
+import PDFSummarizer from './components/PDFSummarizer';
 import NotificationProvider from './components/NotificationSystem';
 import authService from './services/authService';
 
@@ -117,6 +118,14 @@ function App() {
               element={
                 isAuthenticated ? 
                 <FlashcardGenerator onLogout={handleLogout} /> : 
+                <Navigate to="/login" replace />
+              } 
+            />
+            <Route 
+              path="/pdf-summarizer" 
+              element={
+                isAuthenticated ? 
+                <PDFSummarizer onLogout={handleLogout} /> : 
                 <Navigate to="/login" replace />
               } 
             />

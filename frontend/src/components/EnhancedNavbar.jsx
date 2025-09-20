@@ -46,7 +46,30 @@ const EnhancedNavbar = ({ onLogout, showUserMenu = true }) => {
 
   const handleFeaturesClick = (e) => {
     e.preventDefault();
-    smoothScrollTo('features');
+    
+    // If we're not on the dashboard, navigate to dashboard first
+    if (location.pathname !== '/dashboard') {
+      navigate('/dashboard');
+      // Wait for navigation to complete, then scroll to features
+      setTimeout(() => {
+        const featuresElement = document.getElementById('features');
+        if (featuresElement) {
+          featuresElement.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+          });
+        }
+      }, 300);
+    } else {
+      // If we're already on dashboard, just scroll to features
+      const featuresElement = document.getElementById('features');
+      if (featuresElement) {
+        featuresElement.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+      }
+    }
   };
 
   return (

@@ -59,6 +59,44 @@ html {
   100% { transform: rotate(360deg); }
 }
 
+/* Loading Dots Animation - No spinning line */
+.loading-dots {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.loading-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4DB7FF;
+  animation: loadingDots 1.4s infinite ease-in-out both;
+}
+
+.loading-dots span:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+.loading-dots span:nth-child(3) {
+  animation-delay: 0s;
+}
+
+@keyframes loadingDots {
+  0%, 80%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 .loading-screen h2 {
   color: #4DB7FF;
   font-size: 2rem;
@@ -1044,6 +1082,678 @@ html {
 
 .scale-in {
   animation: scaleIn 0.6s ease-out;
+}
+
+/* ========================================
+   PDF SUMMARIZER STYLES
+   ======================================== */
+.pdf-summarizer {
+  min-height: 100vh;
+  padding-top: 100px;
+  background: #0a0a0a;
+}
+
+.pdf-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 0 2rem;
+}
+
+.pdf-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #ffffff, #4DB7FF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.pdf-subtitle {
+  color: #cccccc;
+  font-size: 1.1rem;
+}
+
+.pdf-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+
+/* Main Content - Centered */
+.pdf-main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Upload Container - Centered */
+.pdf-upload-container {
+  margin-bottom: 3rem;
+}
+
+/* Generate Button Large */
+.generate-section {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.generate-btn-large {
+  background: linear-gradient(135deg, #4DB7FF 0%, #00a8ff 100%);
+  color: white;
+  border: none;
+  padding: 1.5rem 3rem;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0 auto;
+  box-shadow: 0 8px 25px rgba(77, 183, 255, 0.3);
+}
+
+.generate-btn-large:hover {
+  background: linear-gradient(135deg, #3a9de6 0%, #4DB7FF 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(77, 183, 255, 0.4);
+}
+
+.generate-btn-large:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Progress Bar Styles */
+.progress-container {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4DB7FF, #00a8ff);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  color: #4DB7FF;
+  font-weight: 600;
+  font-size: 0.9rem;
+  min-width: 40px;
+  text-align: right;
+}
+
+.pdf-upload-area {
+  border: 2px dashed rgba(77, 183, 255, 0.3);
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.02);
+  position: relative;
+  overflow: hidden;
+}
+
+.pdf-upload-area::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(77, 183, 255, 0.1) 50%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.pdf-upload-area:hover {
+  border-color: #4DB7FF;
+  background: rgba(77, 183, 255, 0.05);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(77, 183, 255, 0.15);
+}
+
+.pdf-upload-area:hover::before {
+  opacity: 1;
+}
+
+.pdf-upload-area.drag-active {
+  border-color: #4DB7FF;
+  background: rgba(77, 183, 255, 0.1);
+  transform: scale(1.02);
+  box-shadow: 0 12px 35px rgba(77, 183, 255, 0.2);
+}
+
+.pdf-upload-area.drag-active::before {
+  opacity: 1;
+}
+
+.upload-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.upload-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.upload-text {
+  color: #cccccc;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.upload-limit {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.file-info {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(77, 183, 255, 0.2);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.file-icon {
+  font-size: 1.5rem;
+}
+
+.file-name {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.file-size {
+  color: #cccccc;
+  font-size: 0.9rem;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  transition: all 0.3s ease;
+}
+
+.remove-btn:hover {
+  color: #ff5252;
+  transform: scale(1.1);
+}
+
+.processing-info {
+  background: rgba(77, 183, 255, 0.1);
+  border: 1px solid rgba(77, 183, 255, 0.3);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.summary-types {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.summary-type-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(77, 183, 255, 0.2);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.summary-type-btn:hover {
+  border-color: #4DB7FF;
+  background: rgba(77, 183, 255, 0.05);
+  transform: translateY(-2px);
+}
+
+.summary-type-btn.active {
+  border-color: #4DB7FF;
+  background: rgba(77, 183, 255, 0.1);
+  box-shadow: 0 4px 15px rgba(77, 183, 255, 0.2);
+}
+
+.summary-type-content h3 {
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.summary-type-content p {
+  color: #cccccc;
+  font-size: 0.9rem;
+}
+
+.document-stats {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.document-stats p {
+  color: #cccccc;
+  font-size: 0.9rem;
+}
+
+.summary-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(77, 183, 255, 0.3);
+  border-radius: 6px;
+  padding: 0.5rem;
+  color: #cccccc;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.2rem;
+}
+
+.action-btn:hover {
+  background: rgba(77, 183, 255, 0.1);
+  color: #4DB7FF;
+  transform: scale(1.1);
+}
+
+.summary-content {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(77, 183, 255, 0.2);
+  border-radius: 8px;
+  padding: 1.5rem;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.summary-text {
+  white-space: pre-wrap;
+  color: #cccccc;
+  font-family: inherit;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.instructions {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.instruction-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.step-number {
+  width: 2rem;
+  height: 2rem;
+  background: #4DB7FF;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.instruction-step p {
+  color: #cccccc;
+  line-height: 1.6;
+}
+
+/* Metadata Cards */
+.metadata-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.metadata-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(77, 183, 255, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.metadata-card:hover {
+  border-color: #4DB7FF;
+  background: rgba(77, 183, 255, 0.05);
+  transform: translateY(-2px);
+}
+
+.metadata-label {
+  color: #cccccc;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metadata-value {
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.metadata-sub {
+  color: #888;
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+/* Summary Results */
+.summary-results {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(77, 183, 255, 0.2);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.summary-title {
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.summary-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.action-btn {
+  background: rgba(77, 183, 255, 0.1);
+  border: 1px solid rgba(77, 183, 255, 0.3);
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  color: #4DB7FF;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.action-btn:hover {
+  background: rgba(77, 183, 255, 0.2);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(77, 183, 255, 0.3);
+}
+
+.summary-metadata-box {
+  background: linear-gradient(135deg, #4DB7FF, #00a8ff);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  color: white;
+}
+
+.summary-title-text {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.summary-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.detail-item {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.summary-content-box {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(77, 183, 255, 0.1);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.summary-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(77, 183, 255, 0.2);
+}
+
+.section-icon {
+  font-size: 1.2rem;
+}
+
+.section-title {
+  color: #4DB7FF;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.summary-text-content {
+  color: #cccccc;
+  line-height: 1.8;
+  font-size: 1rem;
+  white-space: pre-wrap;
+}
+
+/* Enhanced Summary Sections */
+.summary-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border-left: 4px solid #4DB7FF;
+}
+
+.summary-section:last-child {
+  margin-bottom: 0;
+}
+
+.summary-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #4DB7FF;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(77, 183, 255, 0.2);
+}
+
+.summary-section-icon {
+  font-size: 1.3rem;
+}
+
+.summary-section-content {
+  color: #ffffff;
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+/* Short Summary Styling */
+.summary-section.short-summary {
+  background: linear-gradient(135deg, rgba(77, 183, 255, 0.1), rgba(0, 168, 255, 0.05));
+  border-left-color: #4DB7FF;
+}
+
+.summary-section.short-summary .summary-section-content {
+  font-style: italic;
+  color: #e0e0e0;
+}
+
+/* Detailed Summary Styling */
+.summary-section.detailed-summary {
+  background: linear-gradient(135deg, rgba(77, 183, 255, 0.08), rgba(0, 168, 255, 0.03));
+  border-left-color: #00a8ff;
+}
+
+.summary-section.detailed-summary .summary-section-content {
+  color: #ffffff;
+}
+
+/* Key Points Styling */
+.summary-section.key-points {
+  background: linear-gradient(135deg, rgba(77, 183, 255, 0.12), rgba(0, 168, 255, 0.06));
+  border-left-color: #4DB7FF;
+}
+
+.summary-section.key-points .summary-section-content {
+  color: #ffffff;
+}
+
+.key-points-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.key-points-list li {
+  position: relative;
+  padding: 0.75rem 0 0.75rem 2rem;
+  margin-bottom: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border-left: 3px solid #4DB7FF;
+  transition: all 0.3s ease;
+}
+
+.key-points-list li:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(5px);
+}
+
+.key-points-list li::before {
+  content: "▶";
+  position: absolute;
+  left: 0.75rem;
+  top: 0.75rem;
+  color: #4DB7FF;
+  font-size: 0.8rem;
+}
+
+.key-points-list li:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive PDF Summarizer */
+@media (max-width: 768px) {
+  .pdf-content {
+    grid-template-columns: 1fr;
+    padding: 0 1rem;
+  }
+  
+  .pdf-title {
+    font-size: 2rem;
+  }
+  
+  .pdf-upload-area {
+    padding: 2rem 1rem;
+  }
+  
+  .upload-icon {
+    font-size: 2rem;
+  }
+  
+  .metadata-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .summary-details {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .summary-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  
+  .summary-actions {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .metadata-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .metadata-card {
+    padding: 1rem;
+  }
+  
+  .summary-metadata-box {
+    padding: 1.5rem;
+  }
+  
+  .summary-content-box {
+    padding: 1.5rem;
+  }
 }
 
 /* ========================================

@@ -4,12 +4,12 @@ const testConnection = async () => {
     console.log('Testing connection to backend...');
     
     // Test health endpoint
-    const healthResponse = await fetch('http://localhost:5000/api/health');
+    const healthResponse = await fetch('http://localhost:5001/api/health');
     const healthData = await healthResponse.json();
     console.log('Health check:', healthData);
     
     // Test registration
-    const registerResponse = await fetch('http://localhost:5000/api/auth/register', {
+    const registerResponse = await fetch('http://localhost:5001/api/auth/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -25,7 +25,7 @@ const testConnection = async () => {
     console.log('Registration test:', registerData);
     
     // Test login
-    const loginResponse = await fetch('http://localhost:5000/api/auth/login', {
+    const loginResponse = await fetch('http://localhost:5001/api/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

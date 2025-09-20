@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import EnhancedNavbar from './EnhancedNavbar';
+import modelManager from '../services/modelManager';
+import { useNotification } from './NotificationSystem';
 import { 
   Plus, 
   Trash2, 
@@ -27,6 +29,7 @@ const QuizBuilder = ({ onLogout }) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const { success, error } = useNotification();
 
   const addQuestion = () => {
     const newQuestion = {
@@ -72,47 +75,49 @@ const QuizBuilder = ({ onLogout }) => {
 
   const generateQuestions = async () => {
     if (!quizData.sourceText.trim()) {
-      alert('Please provide source text to generate questions');
+      error('Please provide source text to generate questions');
+      return;
+    }
+
+    // Check if model is configured
+    const modelInfo = modelManager.getModelInfo();
+    if (!modelInfo.hasApiKey) {
+      error('Please configure your AI model and API key in Settings first');
       return;
     }
 
     setIsGenerating(true);
-    
-    // Simulate AI generation
-    setTimeout(() => {
-      const generatedQuestions = [
-        {
-          id: Date.now() + 1,
-          question: 'What is the main purpose of React hooks?',
-          options: [
-            'To manage state in functional components',
-            'To replace class components entirely',
-            'To improve performance',
-            'To handle routing'
-          ],
-          correctAnswer: 0,
-          explanation: 'React hooks allow you to use state and other React features in functional components.'
-        },
-        {
-          id: Date.now() + 2,
-          question: 'Which hook is used to perform side effects?',
-          options: [
-            'useState',
-            'useEffect',
-            'useContext',
-            'useReducer'
-          ],
-          correctAnswer: 1,
-          explanation: 'useEffect is used to perform side effects like data fetching, subscriptions, or manually changing the DOM.'
-        }
-      ];
+    try {
+      const result = await modelManager.generateQuiz(quizData.sourceText, {
+        numQuestions: 5
+      });
 
-      setQuizData(prev => ({
-        ...prev,
-        questions: [...prev.questions, ...generatedQuestions]
-      }));
+      if (result.content) {
+        // Parse the JSON response
+        const quizData = JSON.parse(result.content);
+        
+        const generatedQuestions = quizData.questions.map((q, index) => ({
+          id: Date.now() + index + 1,
+          question: q.question,
+          options: q.options,
+          correctAnswer: q.correct,
+          explanation: `This is the correct answer based on the source material.`
+        }));
+
+        setQuizData(prev => ({
+          ...prev,
+          questions: [...prev.questions, ...generatedQuestions],
+          title: quizData.title || prev.title
+        }));
+
+        success('Questions generated successfully!');
+      }
+    } catch (err) {
+      console.error('Error generating questions:', err);
+      error('Failed to generate questions. Please check your API key and try again.');
+    } finally {
       setIsGenerating(false);
-    }, 3000);
+    }
   };
 
   const saveQuiz = () => {
