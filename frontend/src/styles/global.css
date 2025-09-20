@@ -1,3 +1,8 @@
+/* ========================================
+   STUDY KARO - GLOBAL STYLES
+   Consolidated CSS for entire application
+   ======================================== */
+
 /* Reset and Base Styles */
 * {
   margin: 0;
@@ -22,7 +27,9 @@ html {
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
 }
 
-/* Loading Screen */
+/* ========================================
+   LOADING SCREEN
+   ======================================== */
 .loading-screen {
   display: flex;
   flex-direction: column;
@@ -44,6 +51,12 @@ html {
   border: 3px solid #333;
   border-top: 3px solid #4DB7FF;
   border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .loading-screen h2 {
@@ -52,7 +65,9 @@ html {
   font-weight: 700;
 }
 
-/* Background Pattern */
+/* ========================================
+   BACKGROUND PATTERNS
+   ======================================== */
 .background-pattern {
   position: fixed;
   top: 0;
@@ -75,7 +90,9 @@ html {
   z-index: -1;
 }
 
-/* Navbar Styles */
+/* ========================================
+   NAVBAR STYLES
+   ======================================== */
 .navbar {
   position: fixed;
   top: 20px;
@@ -255,7 +272,9 @@ html {
   box-shadow: 0 8px 25px rgba(77, 183, 255, 0.4);
 }
 
-/* Landing Page Styles */
+/* ========================================
+   LANDING PAGE STYLES
+   ======================================== */
 .landing-page {
   min-height: 100vh;
   display: flex;
@@ -347,7 +366,9 @@ html {
   box-shadow: 0 15px 35px rgba(77, 183, 255, 0.4);
 }
 
-/* Dashboard Styles */
+/* ========================================
+   DASHBOARD STYLES
+   ======================================== */
 .dashboard {
   min-height: 100vh;
   padding-top: 100px;
@@ -462,7 +483,9 @@ html {
   transform: translateY(-2px);
 }
 
-/* Login Styles */
+/* ========================================
+   LOGIN STYLES
+   ======================================== */
 .login-container {
   min-height: 100vh;
   display: flex;
@@ -489,6 +512,9 @@ html {
   color: #ffffff;
 }
 
+/* ========================================
+   FORM STYLES
+   ======================================== */
 .form-group {
   margin-bottom: 1.5rem;
 }
@@ -539,7 +565,15 @@ html {
   transform: translateY(-2px);
 }
 
-/* Settings Styles */
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ========================================
+   SETTINGS STYLES
+   ======================================== */
 .settings-container {
   min-height: 100vh;
   padding-top: 100px;
@@ -565,6 +599,9 @@ html {
   font-weight: 700;
   margin-bottom: 1.5rem;
   color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .api-key-input {
@@ -589,6 +626,11 @@ html {
   margin-bottom: 1rem;
 }
 
+.model-select option {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
 .save-btn {
   background: #4DB7FF;
   color: white;
@@ -605,7 +647,249 @@ html {
   transform: translateY(-2px);
 }
 
-/* Responsive Design */
+.save-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ========================================
+   QUIZ BUILDER STYLES
+   ======================================== */
+.quiz-builder {
+  min-height: 100vh;
+  padding-top: 100px;
+  background: #0a0a0a;
+}
+
+.quiz-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.quiz-header {
+  margin-bottom: 3rem;
+}
+
+.quiz-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #ffffff, #4DB7FF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.quiz-subtitle {
+  color: #cccccc;
+  font-size: 1.1rem;
+}
+
+.quiz-section {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(77, 183, 255, 0.2);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.textarea-input {
+  width: 100%;
+  min-height: 200px;
+  padding: 1rem;
+  border: 1px solid rgba(77, 183, 255, 0.3);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  font-size: 1rem;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.textarea-input:focus {
+  outline: none;
+  border-color: #4DB7FF;
+  box-shadow: 0 0 0 3px rgba(77, 183, 255, 0.1);
+}
+
+.textarea-input::placeholder {
+  color: #666;
+}
+
+.generate-btn {
+  background: linear-gradient(135deg, #4DB7FF 0%, #00a8ff 100%);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 auto;
+}
+
+.generate-btn:hover {
+  background: linear-gradient(135deg, #3a9de6 0%, #4DB7FF 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(77, 183, 255, 0.4);
+}
+
+.generate-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ========================================
+   RESUME BUILDER STYLES
+   ======================================== */
+.resume-builder {
+  min-height: 100vh;
+  padding-top: 100px;
+  background: #0a0a0a;
+}
+
+.resume-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.resume-header {
+  margin-bottom: 3rem;
+}
+
+.resume-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #ffffff, #4DB7FF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.resume-subtitle {
+  color: #cccccc;
+  font-size: 1.1rem;
+}
+
+.resume-section {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(77, 183, 255, 0.2);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* ========================================
+   FLASHCARD GENERATOR STYLES
+   ======================================== */
+.flashcard-generator {
+  min-height: 100vh;
+  padding-top: 100px;
+  background: #0a0a0a;
+}
+
+.flashcard-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.flashcard-header {
+  margin-bottom: 3rem;
+}
+
+.flashcard-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #ffffff, #4DB7FF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.flashcard-subtitle {
+  color: #cccccc;
+  font-size: 1.1rem;
+}
+
+.flashcard-section {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(77, 183, 255, 0.2);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* ========================================
+   NOTIFICATION STYLES
+   ======================================== */
+.notification-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.notification {
+  background: rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(77, 183, 255, 0.3);
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  color: #ffffff;
+  font-weight: 500;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px);
+  animation: slideInRight 0.3s ease-out;
+  max-width: 400px;
+}
+
+.notification.success {
+  border-color: rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.notification.error {
+  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
 @media (max-width: 768px) {
   .navbar {
     padding: 0.4rem 1rem;
@@ -647,12 +931,48 @@ html {
   }
   
   .dashboard-content,
-  .settings-content {
+  .settings-content,
+  .quiz-content,
+  .resume-content,
+  .flashcard-content {
     padding: 1rem;
+  }
+  
+  .notification-container {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+  }
+  
+  .notification {
+    max-width: none;
   }
 }
 
-/* Animations */
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .dashboard-title,
+  .quiz-title,
+  .resume-title,
+  .flashcard-title {
+    font-size: 2rem;
+  }
+  
+  .feature-card,
+  .settings-section,
+  .quiz-section,
+  .resume-section,
+  .flashcard-section {
+    padding: 1.5rem;
+  }
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -673,6 +993,39 @@ html {
   }
 }
 
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .fade-in-up {
   animation: fadeInUp 0.6s ease-out;
 }
@@ -680,3 +1033,73 @@ html {
 .fade-in {
   animation: fadeIn 0.6s ease-out;
 }
+
+.slide-in-left {
+  animation: slideInLeft 0.6s ease-out;
+}
+
+.slide-in-right {
+  animation: slideInRight 0.6s ease-out;
+}
+
+.scale-in {
+  animation: scaleIn 0.6s ease-out;
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.mb-4 { margin-bottom: 2rem; }
+
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mt-4 { margin-top: 2rem; }
+
+.p-1 { padding: 0.5rem; }
+.p-2 { padding: 1rem; }
+.p-3 { padding: 1.5rem; }
+.p-4 { padding: 2rem; }
+
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+
+.hidden { display: none; }
+.block { display: block; }
+.inline-block { display: inline-block; }
+
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+
+.cursor-pointer { cursor: pointer; }
+.cursor-not-allowed { cursor: not-allowed; }
+
+.opacity-50 { opacity: 0.5; }
+.opacity-75 { opacity: 0.75; }
+
+.transition { transition: all 0.3s ease; }
+.transition-fast { transition: all 0.15s ease; }
+.transition-slow { transition: all 0.5s ease; }
+
+.rounded { border-radius: 0.375rem; }
+.rounded-lg { border-radius: 0.5rem; }
+.rounded-xl { border-radius: 0.75rem; }
+.rounded-2xl { border-radius: 1rem; }
+
+.shadow { box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24); }
+.shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+.shadow-xl { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }

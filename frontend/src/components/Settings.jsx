@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import EnhancedNavbar from './EnhancedNavbar';
 import authService from '../services/authService';
+import { setStorageItem, getStorageItem, validateApiKey } from '../utils/globalUtils';
 import { 
   Key, 
   Brain, 
@@ -63,15 +64,14 @@ const Settings = ({ onLogout }) => {
     }
 
     // Load saved settings from localStorage
-    const savedSettings = localStorage.getItem('studykaro-settings');
+    const savedSettings = getStorageItem('studykaro-settings');
     if (savedSettings) {
-      const parsedSettings = JSON.parse(savedSettings);
       setSettings(prev => ({
         ...prev,
-        ...parsedSettings,
+        ...savedSettings,
         userProfile: {
           ...prev.userProfile,
-          ...parsedSettings.userProfile
+          ...savedSettings.userProfile
         }
       }));
     }
@@ -110,7 +110,7 @@ const Settings = ({ onLogout }) => {
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       // Save to localStorage
-      localStorage.setItem('studykaro-settings', JSON.stringify(settings));
+      setStorageItem('studykaro-settings', settings);
       
       setSaveStatus('success');
       setTimeout(() => setSaveStatus(''), 3000);
@@ -122,26 +122,7 @@ const Settings = ({ onLogout }) => {
     }
   };
 
-  const validateApiKey = (key, provider) => {
-    if (!key) return { valid: false, message: 'API key is required' };
-    
-    switch (provider) {
-      case 'openai':
-        return key.startsWith('sk-') ? 
-          { valid: true, message: 'Valid OpenAI key' } : 
-          { valid: false, message: 'Invalid OpenAI key format' };
-      case 'google':
-        return key.startsWith('AIza') ? 
-          { valid: true, message: 'Valid Google key' } : 
-          { valid: false, message: 'Invalid Google key format' };
-      case 'perplexity':
-        return key.startsWith('pplx-') ? 
-          { valid: true, message: 'Valid Perplexity key' } : 
-          { valid: false, message: 'Invalid Perplexity key format' };
-      default:
-        return { valid: true, message: 'Key looks good' };
-    }
-  };
+  // Using the global validateApiKey utility
 
   return (
     <div className="settings-container">

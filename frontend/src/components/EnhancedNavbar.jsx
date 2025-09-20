@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, User, Settings, LogOut, BookOpen, FileText, Zap, Brain, ChevronDown } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import authService from '../services/authService';
+import { smoothScrollTo } from '../utils/globalUtils';
 
 const EnhancedNavbar = ({ onLogout, showUserMenu = true }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -45,10 +46,7 @@ const EnhancedNavbar = ({ onLogout, showUserMenu = true }) => {
 
   const handleFeaturesClick = (e) => {
     e.preventDefault();
-    const featuresSection = document.getElementById('features');
-    if (featuresSection) {
-      featuresSection.scrollIntoView({ behavior: 'smooth' });
-    }
+    smoothScrollTo('features');
   };
 
   return (

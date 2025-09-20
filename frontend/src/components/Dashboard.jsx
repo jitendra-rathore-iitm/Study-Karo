@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import EnhancedNavbar from './EnhancedNavbar';
 import authService from '../services/authService';
+import { getStorageItem } from '../utils/globalUtils';
 import { 
   BookOpen, 
   FileText, 
