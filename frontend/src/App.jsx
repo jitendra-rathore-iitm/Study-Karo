@@ -8,7 +8,6 @@ import Settings from './components/Settings';
 import QuizBuilder from './components/QuizBuilder';
 import ResumeBuilder from './components/ResumeBuilder';
 import FlashcardGenerator from './components/FlashcardGenerator';
-import Navbar from './components/Navbar';
 import NotificationProvider from './components/NotificationSystem';
 import authService from './services/authService';
 import './App.css';
@@ -79,7 +78,7 @@ function App() {
               element={
                 isAuthenticated ? 
                 <Navigate to="/dashboard" replace /> : 
-                <LandingPage onLogin={() => setIsAuthenticated(true)} />
+                <LandingPage />
               } 
             />
             <Route 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import Navbar from './Navbar';
+import EnhancedNavbar from './EnhancedNavbar';
 import { 
   Plus, 
   Trash2, 
@@ -181,7 +181,7 @@ const ResumeBuilder = ({ onLogout }) => {
   if (isPreviewMode) {
     return (
       <div className="dashboard">
-        <Navbar onLogout={onLogout} />
+        <EnhancedNavbar onLogout={onLogout} showUserMenu={true} />
         <div className="background-pattern"></div>
         <div className="background-glow"></div>
         

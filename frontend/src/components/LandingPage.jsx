@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Users, BookOpen, Brain, FileText, Zap } from 'lucide-react';
+import EnhancedNavbar from './EnhancedNavbar';
 
-const LandingPage = ({ onLogin }) => {
+const LandingPage = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,28 +23,7 @@ const LandingPage = ({ onLogin }) => {
       <div className="background-glow"></div>
       
       {/* Navigation */}
-      <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
-        <div className="navbar-content">
-          <div className="logo">
-            <div className="logo-icon"></div>
-            <span style={{ 
-              color: '#ffffff',
-              fontWeight: '800',
-              letterSpacing: '-0.5px'
-            }}>
-              Study Karo
-            </span>
-          </div>
-          <ul className="nav-links">
-            <li><a href="#features">Features</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
-          <button className="login-btn" onClick={onLogin}>
-            Get Started
-          </button>
-        </div>
-      </nav>
+      <EnhancedNavbar showUserMenu={false} />
 
       {/* Hero Section */}
       <section className="hero-section">
@@ -70,7 +52,7 @@ const LandingPage = ({ onLogin }) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
           className="cta-button"
-          onClick={onLogin}
+          onClick={() => navigate('/login')}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >

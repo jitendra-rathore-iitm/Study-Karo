@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import Navbar from './Navbar';
+import EnhancedNavbar from './EnhancedNavbar';
+import authService from '../services/authService';
 import { 
   Key, 
   Brain, 
@@ -19,20 +20,20 @@ import {
 const Settings = ({ onLogout }) => {
   const [settings, setSettings] = useState({
     openaiApiKey: '',
-    anthropicApiKey: '',
     googleApiKey: '',
+    perplexityApiKey: '',
     selectedModel: 'gpt-4',
     userProfile: {
-      name: 'Demo User',
-      email: 'demo@studykaro.com',
+      name: '',
+      email: '',
       avatar: ''
     }
   });
 
   const [showKeys, setShowKeys] = useState({
     openai: false,
-    anthropic: false,
-    google: false
+    google: false,
+    perplexity: false
   });
 
   const [isSaving, setIsSaving] = useState(false);
@@ -41,16 +42,38 @@ const Settings = ({ onLogout }) => {
   const aiModels = [
     { id: 'gpt-4', name: 'GPT-4', provider: 'OpenAI', description: 'Most capable model for complex tasks' },
     { id: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo', provider: 'OpenAI', description: 'Fast and efficient for most tasks' },
-    { id: 'claude-3-opus', name: 'Claude 3 Opus', provider: 'Anthropic', description: 'Advanced reasoning and analysis' },
-    { id: 'claude-3-sonnet', name: 'Claude 3 Sonnet', provider: 'Anthropic', description: 'Balanced performance and speed' },
-    { id: 'gemini-pro', name: 'Gemini Pro', provider: 'Google', description: 'Google\'s most capable model' }
+    { id: 'gemini-pro', name: 'Gemini Pro', provider: 'Google', description: 'Google\'s most capable model' },
+    { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', provider: 'Google', description: 'Latest Gemini model with enhanced capabilities' },
+    { id: 'perplexity-sonar', name: 'Perplexity Sonar', provider: 'Perplexity', description: 'Real-time web search and analysis' },
+    { id: 'perplexity-online', name: 'Perplexity Online', provider: 'Perplexity', description: 'Online research and fact-checking' }
   ];
 
   useEffect(() => {
+    // Load user data from auth service
+    const user = authService.getUser();
+    if (user) {
+      setSettings(prev => ({
+        ...prev,
+        userProfile: {
+          name: user.name || '',
+          email: user.email || '',
+          avatar: ''
+        }
+      }));
+    }
+
     // Load saved settings from localStorage
     const savedSettings = localStorage.getItem('studykaro-settings');
     if (savedSettings) {
-      setSettings(JSON.parse(savedSettings));
+      const parsedSettings = JSON.parse(savedSettings);
+      setSettings(prev => ({
+        ...prev,
+        ...parsedSettings,
+        userProfile: {
+          ...prev.userProfile,
+          ...parsedSettings.userProfile
+        }
+      }));
     }
   }, []);
 
@@ -107,14 +130,14 @@ const Settings = ({ onLogout }) => {
         return key.startsWith('sk-') ? 
           { valid: true, message: 'Valid OpenAI key' } : 
           { valid: false, message: 'Invalid OpenAI key format' };
-      case 'anthropic':
-        return key.startsWith('sk-ant-') ? 
-          { valid: true, message: 'Valid Anthropic key' } : 
-          { valid: false, message: 'Invalid Anthropic key format' };
       case 'google':
-        return key.length > 20 ? 
+        return key.startsWith('AIza') ? 
           { valid: true, message: 'Valid Google key' } : 
           { valid: false, message: 'Invalid Google key format' };
+      case 'perplexity':
+        return key.startsWith('pplx-') ? 
+          { valid: true, message: 'Valid Perplexity key' } : 
+          { valid: false, message: 'Invalid Perplexity key format' };
       default:
         return { valid: true, message: 'Key looks good' };
     }
@@ -122,7 +145,7 @@ const Settings = ({ onLogout }) => {
 
   return (
     <div className="settings-container">
-      <Navbar onLogout={onLogout} />
+      <EnhancedNavbar onLogout={onLogout} showUserMenu={true} />
       <div className="background-pattern"></div>
       <div className="background-glow"></div>
       
@@ -245,18 +268,18 @@ const Settings = ({ onLogout }) => {
               placeholder: 'sk-...'
             },
             {
-              provider: 'anthropic',
-              name: 'Anthropic API Key',
-              description: 'Required for Claude models',
-              key: settings.anthropicApiKey,
-              placeholder: 'sk-ant-...'
-            },
-            {
               provider: 'google',
               name: 'Google API Key',
               description: 'Required for Gemini models',
               key: settings.googleApiKey,
               placeholder: 'AIza...'
+            },
+            {
+              provider: 'perplexity',
+              name: 'Perplexity API Key',
+              description: 'Required for Perplexity models',
+              key: settings.perplexityApiKey,
+              placeholder: 'pplx-...'
             }
           ].map((api) => {
             const validation = validateApiKey(api.key, api.provider);

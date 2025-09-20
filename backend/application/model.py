@@ -1,5 +1,4 @@
 from . import db
-from datetime import datetime
 from sqlalchemy.dialects.postgresql import JSONB
 
 
@@ -9,8 +8,6 @@ class User(db.Model):
     name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False, index=True)
     password = db.Column(db.String(255), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     
     # Relationships
     quiz_sets = db.relationship('QuizSet', backref='user', lazy=True, cascade="all, delete-orphan")
@@ -27,8 +24,6 @@ class QuizSet(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True, index=True)
     title = db.Column(db.String(255), nullable=False, default="Untitled Quiz")
     source_text = db.Column(db.Text, nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     questions = db.relationship('Question', backref='quiz_set', lazy=True, cascade="all, delete-orphan")
     
     def __repr__(self):
@@ -42,8 +37,6 @@ class Question(db.Model):
     question_text = db.Column(db.Text, nullable=False)
     choices = db.Column(JSONB, nullable=False)
     correct_answer = db.Column(db.Integer, nullable=True)  # Index of correct choice
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     
     def __repr__(self):
         return f'<Question {self.id}: {self.question_text[:50]}...>'
@@ -55,8 +48,6 @@ class FlashcardSet(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True, index=True)
     title = db.Column(db.String(255), nullable=False, default="Untitled Flashcards")
     source_info = db.Column(db.Text, nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     flashcards = db.relationship('Flashcard', backref='flashcard_set', lazy=True, cascade="all, delete-orphan")
     
     def __repr__(self):
@@ -69,8 +60,6 @@ class Flashcard(db.Model):
     set_id = db.Column(db.Integer, db.ForeignKey('flashcard_sets.id'), nullable=False, index=True)
     question = db.Column(db.Text, nullable=False)
     answer = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     
     def __repr__(self):
         return f'<Flashcard {self.id}: {self.question[:30]}...>'
@@ -84,8 +73,6 @@ class Resume(db.Model):
     full_content = db.Column(db.Text, nullable=True)
     generated_bullet_points = db.Column(JSONB, nullable=True)
     critique = db.Column(db.Text, nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     
     def __repr__(self):
         return f'<Resume {self.title}>'

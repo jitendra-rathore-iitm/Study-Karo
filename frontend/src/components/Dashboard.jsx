@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import Navbar from './Navbar';
+import EnhancedNavbar from './EnhancedNavbar';
+import authService from '../services/authService';
 import { 
   BookOpen, 
   FileText, 
@@ -25,22 +26,42 @@ const Dashboard = ({ onLogout }) => {
   });
 
   const [recentActivity, setRecentActivity] = useState([]);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate loading stats
-    setStats({
-      totalQuizzes: 12,
-      totalResumes: 3,
-      totalFlashcards: 45,
-      studyStreak: 7
-    });
+    const fetchUserData = async () => {
+      try {
+        setLoading(true);
+        const userData = await authService.getCurrentUser();
+        setUser(userData.user);
+        
+        // Set empty recent activity since we removed timestamp tracking
+        setRecentActivity([]);
+        
+        // Simulate loading stats (you can replace this with real API calls later)
+        setStats({
+          totalQuizzes: 12,
+          totalResumes: 3,
+          totalFlashcards: 45,
+          studyStreak: 7
+        });
+        
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        // Fallback to mock data
+        setRecentActivity([
+          { id: 1, type: 'quiz', title: 'Python Fundamentals Quiz', time: '2 hours ago', status: 'completed' },
+          { id: 2, type: 'resume', title: 'Software Engineer Resume', time: '1 day ago', status: 'updated' },
+          { id: 3, type: 'flashcard', title: 'Data Structures Flashcards', time: '2 days ago', status: 'created' },
+          { id: 4, type: 'quiz', title: 'React Components Quiz', time: '3 days ago', status: 'completed' }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    setRecentActivity([
-      { id: 1, type: 'quiz', title: 'Python Fundamentals Quiz', time: '2 hours ago', status: 'completed' },
-      { id: 2, type: 'resume', title: 'Software Engineer Resume', time: '1 day ago', status: 'updated' },
-      { id: 3, type: 'flashcard', title: 'Data Structures Flashcards', time: '2 days ago', status: 'created' },
-      { id: 4, type: 'quiz', title: 'React Components Quiz', time: '3 days ago', status: 'completed' }
-    ]);
+    fetchUserData();
   }, []);
 
   const features = [
@@ -87,7 +108,7 @@ const Dashboard = ({ onLogout }) => {
 
   return (
     <div className="dashboard">
-      <Navbar onLogout={onLogout} />
+      <EnhancedNavbar onLogout={onLogout} showUserMenu={true} />
       <div className="background-pattern"></div>
       <div className="background-glow"></div>
       
@@ -99,7 +120,9 @@ const Dashboard = ({ onLogout }) => {
           transition={{ duration: 0.8 }}
           className="dashboard-header"
         >
-          <h1 className="dashboard-title">Welcome back, Student! 👋</h1>
+          <h1 className="dashboard-title">
+            Welcome back, {user?.name || 'Student'}! 👋
+          </h1>
           <p className="dashboard-subtitle">
             Ready to continue your learning journey? Let's build something amazing today.
           </p>
@@ -232,6 +255,7 @@ const Dashboard = ({ onLogout }) => {
 
         {/* Main Features Grid */}
         <motion.div
+          id="features"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
@@ -328,7 +352,8 @@ const Dashboard = ({ onLogout }) => {
                   width: '40px',
                   height: '40px',
                   background: activity.type === 'quiz' ? '#4DB7FF' : 
-                             activity.type === 'resume' ? '#10B981' : '#8B5CF6',
+                             activity.type === 'resume' ? '#10B981' : 
+                             activity.type === 'account' ? '#F59E0B' : '#8B5CF6',
                   borderRadius: '8px',
                   display: 'flex',
                   alignItems: 'center',
@@ -336,7 +361,8 @@ const Dashboard = ({ onLogout }) => {
                   color: 'white'
                 }}>
                   {activity.type === 'quiz' ? <BookOpen size={20} /> :
-                   activity.type === 'resume' ? <FileText size={20} /> : <Zap size={20} />}
+                   activity.type === 'resume' ? <FileText size={20} /> : 
+                   activity.type === 'account' ? <Award size={20} /> : <Zap size={20} />}
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: '600', color: '#ffffff', marginBottom: '0.25rem' }}>
