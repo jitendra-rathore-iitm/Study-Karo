@@ -98,22 +98,79 @@ const Settings = ({ onLogout }) => {
     setSaveStatus('');
 
     try {
+      // Check if user is authenticated
+      const token = authService.getToken();
+      if (!token) {
+        throw new Error('User not authenticated. Please log in again.');
+      }
+
+      // Check if email is being changed to the same email (no need to update)
+      const currentUser = authService.getUser();
+      if (currentUser && 
+          settings.userProfile.email === currentUser.email && 
+          settings.userProfile.name === currentUser.name) {
+        console.log('No changes detected, saving local settings only');
+        // Just save local settings
+        if (settings.apiKey && settings.selectedModel) {
+          modelManager.setModel(settings.selectedModel, settings.apiKey);
+        }
+        setStorageItem('studykaro-settings', settings);
+        setSaveStatus('success');
+        setTimeout(() => setSaveStatus(''), 3000);
+        return;
+      }
+
+      // Test backend connectivity first
+      try {
+        const healthCheck = await fetch('http://localhost:5001/api/health');
+        if (!healthCheck.ok) {
+          throw new Error('Backend not accessible');
+        }
+        console.log('Backend health check passed');
+      } catch (healthError) {
+        console.error('Backend health check failed:', healthError);
+        throw new Error('Cannot connect to backend server. Please check if the server is running.');
+      }
+
       // Update user profile in database
+      console.log('Attempting to save profile:', {
+        name: settings.userProfile.name,
+        email: settings.userProfile.email,
+        token: token ? 'Present' : 'Missing'
+      });
+      
       const profileResponse = await fetch('http://localhost:5001/api/auth/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authService.getToken()}`
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           name: settings.userProfile.name,
           email: settings.userProfile.email
         })
       });
+      
+      console.log('Profile response status:', profileResponse.status);
 
       if (!profileResponse.ok) {
         const errorData = await profileResponse.json();
-        throw new Error(errorData.error || 'Failed to update profile');
+        console.error('Profile update failed:', {
+          status: profileResponse.status,
+          statusText: profileResponse.statusText,
+          error: errorData
+        });
+        
+        // Handle specific error cases
+        if (profileResponse.status === 409) {
+          throw new Error('Email already in use. Please choose a different email address.');
+        } else if (profileResponse.status === 401) {
+          throw new Error('Authentication failed. Please log in again.');
+        } else if (profileResponse.status === 404) {
+          throw new Error('User not found. Please log in again.');
+        } else {
+          throw new Error(errorData.error || `Failed to update profile (${profileResponse.status})`);
+        }
       }
 
       // Update local user data
@@ -132,6 +189,23 @@ const Settings = ({ onLogout }) => {
       setTimeout(() => setSaveStatus(''), 3000);
     } catch (error) {
       console.error('Save error:', error);
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack,
+        response: error.response
+      });
+      
+      // Try to save at least the local settings if database fails
+      try {
+        if (settings.apiKey && settings.selectedModel) {
+          modelManager.setModel(settings.selectedModel, settings.apiKey);
+        }
+        setStorageItem('studykaro-settings', settings);
+        console.log('Local settings saved successfully despite database error');
+      } catch (localError) {
+        console.error('Failed to save local settings:', localError);
+      }
+      
       setSaveStatus('error');
       setTimeout(() => setSaveStatus(''), 3000);
     } finally {

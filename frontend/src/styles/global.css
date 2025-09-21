@@ -986,6 +986,25 @@ html {
   background: #0a0a0a;
 }
 
+/* Enhanced Resume Builder Animations */
+.resume-builder * {
+  will-change: auto;
+}
+
+.resume-builder .motion-div {
+  will-change: transform, opacity;
+}
+
+.resume-builder button {
+  will-change: transform, box-shadow, background-color;
+}
+
+.resume-builder input,
+.resume-builder textarea,
+.resume-builder select {
+  will-change: border-color, box-shadow, background-color;
+}
+
 .resume-content {
   max-width: 1200px;
   margin: 0 auto;
@@ -1189,6 +1208,42 @@ html {
 }
 
 /* ========================================
+   ENHANCED ANIMATION UTILITIES
+   ======================================== */
+
+/* Smooth transitions for all interactive elements */
+button, input, textarea, select, .clickable {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced hover effects */
+button:hover, .clickable:hover {
+  transform: translateY(-1px);
+}
+
+button:active, .clickable:active {
+  transform: translateY(0);
+}
+
+/* Smooth focus states */
+input:focus, textarea:focus, select:focus {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(77, 183, 255, 0.15);
+}
+
+/* Performance optimizations */
+.motion-element {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Smooth scrolling for all elements */
+* {
+  scroll-behavior: smooth;
+}
+
+/* ========================================
    ANIMATIONS
    ======================================== */
 @keyframes fadeInUp {
@@ -1241,6 +1296,17 @@ html {
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -1934,6 +2000,75 @@ html {
   .summary-content-box {
     padding: 1.5rem;
   }
+}
+
+/* ========================================
+   ANIMATION UTILITY CLASSES
+   ======================================== */
+
+/* Consistent animation classes */
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideInUp 0.6s ease-out;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.6s ease-out;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.6s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.6s ease-out;
+}
+
+/* Smooth hover animations */
+.hover-lift {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(77, 183, 255, 0.3);
+}
+
+.hover-scale {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+/* Button animation utilities */
+.btn-smooth {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, box-shadow, background-color;
+}
+
+.btn-smooth:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(77, 183, 255, 0.3);
+}
+
+.btn-smooth:active {
+  transform: translateY(0);
+}
+
+/* Form element animations */
+.form-smooth {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: border-color, box-shadow, background-color;
+}
+
+.form-smooth:focus {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(77, 183, 255, 0.15);
 }
 
 /* ========================================
