@@ -28,7 +28,6 @@ const Navbar = ({ onLogout }) => {
 
   const navItems = [
     { path: '/dashboard', label: 'Dashboard', icon: <BookOpen size={20} /> },
-    { path: '/quiz-builder', label: 'Quiz Builder', icon: <BookOpen size={20} /> },
     { path: '/resume-builder', label: 'Resume Builder', icon: <FileText size={20} /> },
     { path: '/flashcard-generator', label: 'Flashcards', icon: <Zap size={20} /> },
     { path: '/settings', label: 'Settings', icon: <Settings size={20} /> }

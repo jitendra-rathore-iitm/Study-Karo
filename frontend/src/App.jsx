@@ -5,7 +5,6 @@ import LandingPage from './components/LandingPage';
 import Dashboard from './components/Dashboard';
 import Login from './components/Login';
 import Settings from './components/Settings';
-import QuizBuilder from './components/QuizBuilder';
 import ResumeBuilder from './components/ResumeBuilder';
 import FlashcardGenerator from './components/FlashcardGenerator';
 import PDFSummarizer from './components/PDFSummarizer';
@@ -94,14 +93,6 @@ function App() {
               element={
                 isAuthenticated ? 
                 <Dashboard onLogout={handleLogout} /> : 
-                <Navigate to="/login" replace />
-              } 
-            />
-            <Route 
-              path="/quiz-builder" 
-              element={
-                isAuthenticated ? 
-                <QuizBuilder onLogout={handleLogout} /> : 
                 <Navigate to="/login" replace />
               } 
             />

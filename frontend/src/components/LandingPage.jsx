@@ -43,8 +43,8 @@ const LandingPage = () => {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="hero-subtitle"
         >
-          Transform your learning experience with intelligent quiz generation, 
-          resume building, and flashcard creation powered by advanced AI models.
+          Transform your learning experience with intelligent resume building, 
+          flashcard creation, and PDF summarization powered by advanced AI models.
         </motion.p>
 
         <motion.button
@@ -97,11 +97,6 @@ const LandingPage = () => {
                 icon: <Zap size={32} />,
                 title: 'Flashcard Generator',
                 description: 'Generate flashcards automatically from your study material'
-              },
-              {
-                icon: <BookOpen size={32} />,
-                title: 'Smart Quiz Builder',
-                description: 'Generate intelligent quizzes from any text using AI models'
               },
               {
                 icon: <FileText size={32} />,

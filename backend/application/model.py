@@ -10,7 +10,6 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     
     # Relationships
-    quiz_sets = db.relationship('QuizSet', backref='user', lazy=True, cascade="all, delete-orphan")
     flashcard_sets = db.relationship('FlashcardSet', backref='user', lazy=True, cascade="all, delete-orphan")
     resumes = db.relationship('Resume', backref='user', lazy=True, cascade="all, delete-orphan")
     
@@ -18,28 +17,6 @@ class User(db.Model):
         return f'<User {self.email}>'
 
 
-class QuizSet(db.Model):
-    __tablename__ = 'quiz_sets'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True, index=True)
-    title = db.Column(db.String(255), nullable=False, default="Untitled Quiz")
-    source_text = db.Column(db.Text, nullable=True)
-    questions = db.relationship('Question', backref='quiz_set', lazy=True, cascade="all, delete-orphan")
-    
-    def __repr__(self):
-        return f'<QuizSet {self.title}>'
-
-
-class Question(db.Model):
-    __tablename__ = 'questions'
-    id = db.Column(db.Integer, primary_key=True)
-    quiz_set_id = db.Column(db.Integer, db.ForeignKey('quiz_sets.id'), nullable=False, index=True)
-    question_text = db.Column(db.Text, nullable=False)
-    choices = db.Column(JSONB, nullable=False)
-    correct_answer = db.Column(db.Integer, nullable=True)  # Index of correct choice
-    
-    def __repr__(self):
-        return f'<Question {self.id}: {self.question_text[:50]}...>'
 
 
 class FlashcardSet(db.Model):

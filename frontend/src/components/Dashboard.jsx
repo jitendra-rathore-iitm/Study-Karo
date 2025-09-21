@@ -21,7 +21,6 @@ import {
 
 const Dashboard = ({ onLogout }) => {
   const [stats, setStats] = useState({
-    totalQuizzes: 0,
     totalResumes: 0,
     totalFlashcards: 0,
     studyStreak: 0
@@ -43,7 +42,6 @@ const Dashboard = ({ onLogout }) => {
         
         // Simulate loading stats (you can replace this with real API calls later)
         setStats({
-          totalQuizzes: 12,
           totalResumes: 3,
           totalFlashcards: 45,
           studyStreak: 7
@@ -53,10 +51,9 @@ const Dashboard = ({ onLogout }) => {
         console.error('Error fetching user data:', error);
         // Fallback to mock data
         setRecentActivity([
-          { id: 1, type: 'quiz', title: 'Python Fundamentals Quiz', time: '2 hours ago', status: 'completed' },
-          { id: 2, type: 'resume', title: 'Software Engineer Resume', time: '1 day ago', status: 'updated' },
-          { id: 3, type: 'flashcard', title: 'Data Structures Flashcards', time: '2 days ago', status: 'created' },
-          { id: 4, type: 'quiz', title: 'React Components Quiz', time: '3 days ago', status: 'completed' }
+          { id: 1, type: 'resume', title: 'Software Engineer Resume', time: '1 day ago', status: 'updated' },
+          { id: 2, type: 'flashcard', title: 'Data Structures Flashcards', time: '2 days ago', status: 'created' },
+          { id: 3, type: 'summary', title: 'Machine Learning PDF Summary', time: '3 days ago', status: 'completed' }
         ]);
       } finally {
         setLoading(false);
@@ -84,14 +81,6 @@ const Dashboard = ({ onLogout }) => {
       stats: stats.totalFlashcards
     },
     {
-      title: 'Quiz Builder',
-      description: 'Create intelligent quizzes from any text using AI models',
-      icon: <BookOpen size={32} />,
-      path: '/quiz-builder',
-      color: 'from-blue-500 to-cyan-500',
-      stats: stats.totalQuizzes
-    },
-    {
       title: 'Resume Builder',
       description: 'Build professional resumes with AI-powered suggestions',
       icon: <FileText size={32} />,
@@ -112,7 +101,6 @@ const Dashboard = ({ onLogout }) => {
   const quickActions = [
     { title: 'PDF Summarizer', icon: <Scissors size={20} />, path: '/pdf-summarizer' },
     { title: 'Flashcards', icon: <Zap size={20} />, path: '/flashcard-generator' },
-    { title: 'Quiz', icon: <BookOpen size={20} />, path: '/quiz-builder' },
     { title: 'Resume', icon: <FileText size={20} />, path: '/resume-builder' }
   ];
 
@@ -151,7 +139,6 @@ const Dashboard = ({ onLogout }) => {
           }}
         >
           {[
-            { label: 'Total Quizzes', value: stats.totalQuizzes, icon: <BookOpen size={24} />, color: '#4DB7FF' },
             { label: 'Resumes Created', value: stats.totalResumes, icon: <FileText size={24} />, color: '#10B981' },
             { label: 'Flashcards', value: stats.totalFlashcards, icon: <Zap size={24} />, color: '#8B5CF6' },
             { label: 'Study Streak', value: `${stats.studyStreak} days`, icon: <TrendingUp size={24} />, color: '#F59E0B' }

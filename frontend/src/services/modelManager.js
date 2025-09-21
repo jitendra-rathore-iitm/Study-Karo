@@ -134,61 +134,49 @@ Original Request: ${prompt}
     return realTimeContext;
   }
 
-  /**
-   * Generate quiz from text
-   * @param {string} text - Source text
-   * @param {Object} options - Quiz options
-   * @returns {Promise<Object>} - Generated quiz
-   */
-  async generateQuiz(text, options = {}) {
-    const prompt = `Generate a quiz from the following text. Create ${options.numQuestions || 5} multiple choice questions with 4 options each. Make sure the questions test understanding and are relevant to the content.
-
-Text: ${text}
-
-Format the response as JSON with this structure:
-{
-  "title": "Quiz Title",
-  "questions": [
-    {
-      "question": "Question text",
-      "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
-      "correct": 0
-    }
-  ]
-}`;
-
-    return await this.generateContent(prompt, {
-      maxTokens: 2000,
-      temperature: 0.3,
-      ...options
-    });
-  }
 
   /**
-   * Generate flashcards from text
+   * Generate exam-focused flashcards from text (optimized for speed)
    * @param {string} text - Source text
    * @param {Object} options - Flashcard options
    * @returns {Promise<Object>} - Generated flashcards
    */
   async generateFlashcards(text, options = {}) {
-    const prompt = `Generate flashcards from the following text. Create ${options.numCards || 10} flashcards that cover the key concepts and important information.
+    // Truncate text to prevent timeout
+    const truncatedText = text.substring(0, 1500);
+    
+    const prompt = `IMPORTANT: Respond ONLY in English. Create ${options.numCards || 10} exam flashcards from this content.
 
-Text: ${text}
+Content: ${truncatedText}
 
-Format the response as JSON with this structure:
+REQUIREMENTS:
+- Write ALL text in English only
+- Use exact JSON format with proper quotes and commas
+- Include exactly ${options.numCards || 10} cards
+- Each card must have all required fields
+
+JSON FORMAT:
 {
-  "title": "Flashcard Set Title",
+  "title": "Subject Title in English",
+  "description": "Brief description in English",
   "cards": [
     {
-      "question": "Question or term",
-      "answer": "Answer or definition"
+      "question": "Clear question in English",
+      "answer": "Concise answer in English",
+      "difficulty": "Easy",
+      "category": "Definition",
+      "keyPoints": ["Point 1", "Point 2"],
+      "examRelevance": "High"
     }
   ]
 }`;
 
     return await this.generateContent(prompt, {
-      maxTokens: 1500,
-      temperature: 0.3,
+      maxTokens: 1500, // Reduced for speed
+      temperature: 0.2, // Lower for consistency and speed
+      top_p: 0.9,
+      frequency_penalty: 0.1,
+      presence_penalty: 0.1,
       ...options
     });
   }
