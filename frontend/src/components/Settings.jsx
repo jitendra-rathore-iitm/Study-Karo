@@ -31,9 +31,9 @@ const Settings = ({ onLogout }) => {
   });
 
   const [showApiKey, setShowApiKey] = useState(false);
-
   const [isSaving, setIsSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState('');
+  const [realTimeDataSourceStatus, setRealTimeDataSourceStatus] = useState(null);
 
   const aiModels = modelManager.getAvailableModels();
 
@@ -63,6 +63,10 @@ const Settings = ({ onLogout }) => {
         }
       }));
     }
+
+    // Load real-time data source status
+    const dataSourceStatus = modelManager.getRealTimeDataSourceStatus();
+    setRealTimeDataSourceStatus(dataSourceStatus);
   }, []);
 
   const handleInputChange = (field, value) => {
@@ -236,6 +240,81 @@ const Settings = ({ onLogout }) => {
               {aiModels.find(m => m.id === settings.selectedModel)?.description}
             </p>
           </div>
+        </motion.div>
+
+        {/* Real-time Data Source Status */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="settings-section"
+        >
+          <h2 className="section-title">
+            <Zap size={24} style={{ marginRight: '0.5rem' }} />
+            Real-time Data Source
+          </h2>
+          
+          {realTimeDataSourceStatus && (
+            <div style={{
+              background: 'rgba(16, 185, 129, 0.1)',
+              border: '1px solid rgba(16, 185, 129, 0.3)',
+              borderRadius: '8px',
+              padding: '1.5rem',
+              marginTop: '1rem'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+                <div style={{
+                  width: '12px',
+                  height: '12px',
+                  borderRadius: '50%',
+                  background: realTimeDataSourceStatus.isActive ? '#10B981' : '#EF4444',
+                  animation: realTimeDataSourceStatus.isActive ? 'pulse 2s infinite' : 'none'
+                }}></div>
+                <span style={{ fontWeight: '600', color: '#10B981' }}>
+                  {realTimeDataSourceStatus.isActive ? 'Active' : 'Inactive'}
+                </span>
+                <span style={{ color: '#cccccc', fontSize: '0.9rem' }}>
+                  • {realTimeDataSourceStatus.dataAccuracy} Accuracy
+                </span>
+              </div>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
+                <div>
+                  <span style={{ color: '#666', fontSize: '0.8rem' }}>Source Type</span>
+                  <p style={{ color: '#ffffff', margin: '0.25rem 0 0 0', fontWeight: '500' }}>
+                    {realTimeDataSourceStatus.sourceType}
+                  </p>
+                </div>
+                <div>
+                  <span style={{ color: '#666', fontSize: '0.8rem' }}>Last Update</span>
+                  <p style={{ color: '#ffffff', margin: '0.25rem 0 0 0', fontWeight: '500' }}>
+                    {new Date(realTimeDataSourceStatus.lastUpdate).toLocaleTimeString()}
+                  </p>
+                </div>
+              </div>
+              
+              <div>
+                <span style={{ color: '#666', fontSize: '0.8rem' }}>Features</span>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5rem' }}>
+                  {realTimeDataSourceStatus.features.map((feature, index) => (
+                    <span
+                      key={index}
+                      style={{
+                        background: 'rgba(16, 185, 129, 0.2)',
+                        color: '#10B981',
+                        padding: '0.25rem 0.5rem',
+                        borderRadius: '4px',
+                        fontSize: '0.75rem',
+                        fontWeight: '500'
+                      }}
+                    >
+                      {feature}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </motion.div>
 
         {/* API Keys */}

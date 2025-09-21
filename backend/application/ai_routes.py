@@ -70,7 +70,7 @@ def generate_content():
         return jsonify({"error": f"Generation failed: {str(e)}"}), 500
 
 def call_openai_api(model, prompt, api_key, options):
-    """Call OpenAI API"""
+    """Call OpenAI API with optimized settings"""
     try:
         url = "https://api.openai.com/v1/chat/completions"
         headers = {
@@ -78,28 +78,43 @@ def call_openai_api(model, prompt, api_key, options):
             "Content-Type": "application/json"
         }
         
+        # Optimized data payload with better defaults
         data = {
             "model": model,
             "messages": [{"role": "user", "content": prompt}],
             "max_tokens": options.get('maxTokens', 1000),
-            "temperature": options.get('temperature', 0.7)
+            "temperature": options.get('temperature', 0.7),
+            "stream": False,  # Disable streaming for better performance
+            "top_p": 1.0,     # Default top_p for consistent results
+            "frequency_penalty": 0.0,  # No frequency penalty
+            "presence_penalty": 0.0    # No presence penalty
         }
 
-        response = requests.post(url, headers=headers, json=data, timeout=30)
+        # Reduced timeout for better responsiveness
+        response = requests.post(url, headers=headers, json=data, timeout=20)
         response.raise_for_status()
         
         result = response.json()
+        
+        # Enhanced error handling
+        if 'choices' not in result or not result['choices']:
+            return {"error": "No response from OpenAI API"}
+            
         content = result['choices'][0]['message']['content']
         
         return {"content": content}
         
+    except requests.exceptions.Timeout:
+        return {"error": "OpenAI API request timed out"}
     except requests.exceptions.RequestException as e:
         return {"error": f"OpenAI API error: {str(e)}"}
+    except KeyError as e:
+        return {"error": f"Unexpected response format from OpenAI: {str(e)}"}
     except Exception as e:
         return {"error": f"OpenAI error: {str(e)}"}
 
 def call_google_api(model, prompt, api_key, options):
-    """Call Google Gemini API"""
+    """Call Google Gemini API with optimized settings"""
     try:
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
         headers = {
@@ -113,25 +128,43 @@ def call_google_api(model, prompt, api_key, options):
             }],
             "generationConfig": {
                 "maxOutputTokens": options.get('maxTokens', 1000),
-                "temperature": options.get('temperature', 0.7)
-            }
+                "temperature": options.get('temperature', 0.7),
+                "topP": 1.0,
+                "topK": 40
+            },
+            "safetySettings": [
+                {
+                    "category": "HARM_CATEGORY_HARASSMENT",
+                    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+                }
+            ]
         }
 
-        response = requests.post(url, headers=headers, json=data, timeout=30)
+        # Reduced timeout for better responsiveness
+        response = requests.post(url, headers=headers, json=data, timeout=20)
         response.raise_for_status()
         
         result = response.json()
+        
+        # Enhanced error handling
+        if 'candidates' not in result or not result['candidates']:
+            return {"error": "No response from Google API"}
+            
         content = result['candidates'][0]['content']['parts'][0]['text']
         
         return {"content": content}
         
+    except requests.exceptions.Timeout:
+        return {"error": "Google API request timed out"}
     except requests.exceptions.RequestException as e:
         return {"error": f"Google API error: {str(e)}"}
+    except KeyError as e:
+        return {"error": f"Unexpected response format from Google: {str(e)}"}
     except Exception as e:
         return {"error": f"Google error: {str(e)}"}
 
 def call_perplexity_api(model, prompt, api_key, options):
-    """Call Perplexity API"""
+    """Call Perplexity API with optimized settings"""
     try:
         url = "https://api.perplexity.ai/chat/completions"
         headers = {
@@ -143,19 +176,33 @@ def call_perplexity_api(model, prompt, api_key, options):
             "model": model,
             "messages": [{"role": "user", "content": prompt}],
             "max_tokens": options.get('maxTokens', 1000),
-            "temperature": options.get('temperature', 0.7)
+            "temperature": options.get('temperature', 0.7),
+            "stream": False,  # Disable streaming for better performance
+            "top_p": 1.0,     # Default top_p for consistent results
+            "frequency_penalty": 0.0,  # No frequency penalty
+            "presence_penalty": 0.0    # No presence penalty
         }
 
-        response = requests.post(url, headers=headers, json=data, timeout=30)
+        # Reduced timeout for better responsiveness
+        response = requests.post(url, headers=headers, json=data, timeout=20)
         response.raise_for_status()
         
         result = response.json()
+        
+        # Enhanced error handling
+        if 'choices' not in result or not result['choices']:
+            return {"error": "No response from Perplexity API"}
+            
         content = result['choices'][0]['message']['content']
         
         return {"content": content}
         
+    except requests.exceptions.Timeout:
+        return {"error": "Perplexity API request timed out"}
     except requests.exceptions.RequestException as e:
         return {"error": f"Perplexity API error: {str(e)}"}
+    except KeyError as e:
+        return {"error": f"Unexpected response format from Perplexity: {str(e)}"}
     except Exception as e:
         return {"error": f"Perplexity error: {str(e)}"}
 
