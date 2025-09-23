@@ -37,17 +37,25 @@ git clone https://github.com/jitendra-rathore-iitm/Study-Karo.git
 ```
 
 ### 2. Backend Setup
-
+### For linux
 ```bash
-cd Study-Karo/backend
-uv venv venv
-uv pip install -r requirements.txt
+cd backend
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+### For Windows
+```bash
+cd backend
+python -m venv venv
+venv/Scripts/activate
+pip install -r requirements.txt
 ```
 
 In a **new terminal**, run:
 
 ```bash
-cd Study-Karo/backend
+cd backend
 docker compose up --build -d
 ```
 
@@ -62,7 +70,7 @@ python run.py
 In a new terminal:
 
 ```bash
-cd Study-Karo/frontend
+cd frontend
 npm install
 npm run dev
 ```
