@@ -5,6 +5,7 @@ Welcome to **Study Karo**, an intelligent and interactive AI-driven learning pla
 
 Built using **React**, **Flask**, **PostgreSQL**, **Docker**, and powered by cutting-edge AI APIs like **Gemini 2.5 Pro**, **Gemini 2.5 Flash**, and **Perplexity Pro**, this platform delivers fast, responsive, and highly personalized content—on demand.
 
+Demo:- https://drive.google.com/file/d/1kvnRlbh46-fnRd5cEKSGccCBquh6D5mZ/view?usp=sharing
 ---
 
 ## 🚀 Features
@@ -68,14 +69,8 @@ npm run dev
 
 ---
 
-## 🌍 Demo & Screenshots
-
-Demo:- https://drive.google.com/file/d/1kvnRlbh46-fnRd5cEKSGccCBquh6D5mZ/view?usp=sharing
 
 
-<img width="1000" height="1000" alt="Screenshot 2025-09-22 024053" src="https://github.com/user-attachments/assets/4990ca76-830d-4ad1-b367-4b47d9c8a9a7" /> <br/><br/>
-
-<img width="1000" height="1000" alt="Screenshot 2025-09-22 030809" src="https://github.com/user-attachments/assets/91014928-2d1b-46c0-bf26-f103d23e3e74" /><br/><br/>
 
 
 ---
@@ -118,9 +113,6 @@ MIT License. See `LICENSE` for more information.
 
 ---
 
-
-> ⚡ Built with love and AI, to help you **Study Karo** — anytime, anywhere.
-```
 
 
 
